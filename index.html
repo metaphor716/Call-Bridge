@@ -6,14 +6,14 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
-:root{--cw:min(11.5vw,58px);--tw:min(14vw,56px)}
+:root{--cw:min(11.5vw,58px);--tw:min(14vw,56px);--chat-bottom:130px}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Hind Siliguri',sans-serif;background:radial-gradient(circle,#1a5c38,#0d2b1d);color:#fff;display:flex;flex-direction:column;height:100dvh;overflow:hidden;user-select:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 .hd{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 12px;background:#0006;font-size:13px;border-bottom:1px solid #2d6a45}
 .hd b{color:#facc15}
 .box{margin:auto;width:min(92vw,420px);background:#052e1bdd;border:1px solid #2d6a45;border-radius:20px;padding:20px;text-align:center}
 .box h2{color:#facc15;font-size:19px;margin-bottom:12px}
-input{width:100%;padding:11px;margin:6px 0;border-radius:10px;border:1px solid #2d9a5a;background:#0008;color:#fff;font:inherit}
+input{width:100%;padding:11px;margin:6px 0;border-radius:10px;border:1px solid #2d9a5a;background:#0008;color:#fff;font:inherit;user-select:text;-webkit-user-select:text}
 .btn{padding:10px 16px;border:0;border-radius:10px;background:#059669;color:#fff;font:700 15px inherit;font-family:inherit;cursor:pointer}
 .btn.y{background:#eab308;color:#000}.btn.r{background:#dc2626}.btn.w{width:100%;margin:4px 0}
 .btn:disabled{opacity:.35}
@@ -25,7 +25,7 @@ input{width:100%;padding:11px;margin:6px 0;border-radius:10px;border:1px solid #
 #sb td{padding:1px 6px;border:1px solid #888;text-align:center;font-weight:700}
 #sb td:first-child{text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34vw}
 #sb tr.turn td{background:#fef08a}#sb tr.me td:first-child{color:#047857}
-#arena{flex:1;min-height:0;display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto 1fr;align-items:center;justify-items:center;padding:4px}
+#arena{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:auto 1fr;align-items:center;justify-items:center;padding:4px}
 #s2{grid-column:2;grid-row:1}#s1{grid-column:1;grid-row:2}#zone{grid-column:2;grid-row:2}#s3{grid-column:3;grid-row:2}
 .seat{background:#0006;border:2px solid #2d6a45;border-radius:12px;padding:3px 8px;font-size:12px;text-align:center;max-width:28vw;line-height:1.3;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .seat.turn{border-color:#facc15;box-shadow:0 0 12px #facc15aa}
@@ -44,8 +44,33 @@ input{width:100%;padding:11px;margin:6px 0;border-radius:10px;border:1px solid #
 .avc{font-size:26px;cursor:pointer;padding:2px;border-radius:50%;display:inline-block}.avc.sel{background:#facc15}
 .slots{display:grid;grid-template-columns:1fr 1fr;gap:8px}.slot{border-radius:12px;padding:8px;min-height:70px;background:#ffffff18;border:1px solid #4ade80}
 #panel .nb{padding:6px 8px;background:#14532d;min-width:34px}#panel .nb.y{background:#eab308}
+
+/* ---------- chat ---------- */
+#chat{position:fixed;right:max(8px,env(safe-area-inset-right));top:calc(env(safe-area-inset-top,0px) + 48px);
+width:min(94vw,360px);height:min(46dvh,300px);display:flex;flex-direction:column;
+background:#000e;border:1px solid #2d9a5a;border-radius:14px;overflow:hidden;z-index:60;
+box-shadow:0 8px 24px #000a}
+#chat.col{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + var(--chat-bottom));
+width:auto;height:auto;border-radius:20px;background:#14532d;box-shadow:0 3px 10px #0008}
+#chat.col #cm,#chat.col #cf{display:none}
+#ch{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#14532d;padding:9px 14px;font-size:15px;font-weight:700;cursor:pointer;flex:none}
+#chat.col #ch{padding:7px 14px}
+#cn{background:#dc2626;border-radius:10px;padding:0 7px;margin-left:6px;font-size:12px}#cn:empty{display:none}
+#cx{font-size:14px;color:#facc15}
+#cm{flex:1;min-height:0;overflow-y:auto;padding:8px 10px;font-size:15px;line-height:1.4;user-select:text;-webkit-user-select:text}
+.cmsg{margin-bottom:4px;word-break:break-word}.cmsg b{color:#facc15}.cmsg.mine b{color:#4ade80}
+#cf{display:flex;flex:none;border-top:1px solid #2d9a5a}
+#cf input{flex:1;min-width:0;margin:0;padding:11px 12px;border:0;border-radius:0;background:#0009;font-size:16px}
+#cf button{border:0;background:#eab308;color:#000;font-weight:700;padding:0 16px;font-size:18px;cursor:pointer}
+body.chatopen #bubs{display:none}
+
+#bubs{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 40px);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;z-index:50}
+.bub{background:#000d;border:1px solid #facc15;color:#fff;padding:5px 12px;border-radius:14px;font-size:14px;max-width:88vw;word-break:break-word;animation:pop .2s;transition:opacity .5s}
+.bub.out{opacity:0}.bub b{color:#facc15}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:none;opacity:1}}
 </style></head><body>
-<header class="hd"><b>♠ কল ব্রিজ</b><span id="rc"></span><a onclick="leave()" style="cursor:pointer">⎋ বের</a></header>
+<header class="hd"><b>♠ কল ব্রিজ</b><span id="rc"></span><a onclick="sndShuffle();setTimeout(sndCard,1500)" style="cursor:pointer">🔊</a><a onclick="leave()" style="cursor:pointer">⎋ বের</a></header>
+<div id="bubs"></div>
 
 <div id="lobby" class="box"><h2>রুম তৈরি বা জয়েন করুন</h2>
 <input id="pn" placeholder="আপনার নাম" maxlength="14"><div id="avs" style="margin:4px 0"></div>
@@ -65,34 +90,90 @@ input{width:100%;padding:11px;margin:6px 0;border-radius:10px;border:1px solid #
 <div id="game"><div id="info"></div><div id="status"></div>
 <table id="sb"></table>
 <div id="arena"><div class="seat" id="s2"></div><div class="seat" id="s1"></div><div id="zone"></div><div class="seat" id="s3"></div></div>
-<div id="panel"></div><div class="seat" id="s0" style="align-self:center;max-width:60vw"></div><div id="hand"></div></div>
+<div id="panel"></div><div class="seat" id="s0" style="align-self:center;max-width:60vw"></div><div id="hand"></div>
+
+<div id="chat" class="col">
+<div id="ch" onclick="toggleChat()"><span>💬 চ্যাট<span id="cn"></span></span><span id="cx">▸</span></div>
+<div id="cm"></div>
+<div id="cf"><input id="ci" maxlength="60" placeholder="মেসেজ..." enterkeyhint="send" autocomplete="off" onkeydown="if(event.key==='Enter')sendChat()"><button onclick="sendChat()">➤</button></div>
+</div>
+</div>
 
 <script>
 firebase.initializeApp({databaseURL:"https://cards29-game-default-rtdb.firebaseio.com"});
 const db=firebase.database(),$=id=>document.getElementById(id);
 const ORD=['2','3','4','5','6','7','8','9','10','J','Q','K','A'],SY={S:'♠',H:'♥',D:'♦',C:'♣'},ROUNDS=5;
-let room='',me=-1,S=null,ref=null,lastDeal=null,lastTbl=0,sched='',selBid=1;
+let room='',me=-1,S=null,ref=null,lastDeal=null,lastTbl=0,sched='',selBid=2;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const rk=c=>c.slice(1),fmt=v=>{v=(v||0)/10;return Number.isInteger(v)?String(v):v.toFixed(1)};
 const view=id=>['lobby','wait','game'].forEach(v=>$(v).style.display=v===id?(v==='game'?'flex':'block'):'none');
 
 /* ---------- sound ---------- */
-let AC;function ac(){AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
-addEventListener('pointerdown',()=>{try{ac()}catch(e){}},{once:true});
+let AC;
+function ac(){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;AC=AC||new C();if(AC.state!=='running')AC.resume();return AC}
 function noise(t,d,f,v){const a=ac(),n=a.sampleRate*d|0,b=a.createBuffer(1,n,a.sampleRate),x=b.getChannelData(0);
 for(let i=0;i<n;i++)x[i]=(Math.random()*2-1)*(1-i/n);const s=a.createBufferSource(),fl=a.createBiquadFilter(),g=a.createGain();
 s.buffer=b;fl.type='bandpass';fl.frequency.value=f;g.gain.value=v;s.connect(fl);fl.connect(g);g.connect(a.destination);s.start(a.currentTime+t)}
-const sndShuffle=()=>{try{for(let i=0;i<16;i++)noise(i*.07,.06,2000+Math.random()*3000,.6)}catch(e){}};
-function sndCard(){try{const a=ac(),n=a.sampleRate*.08|0,b=a.createBuffer(1,n,a.sampleRate),x=b.getChannelData(0);
-for(let i=0;i<n;i++)x[i]=(Math.random()*2-1)*(1-i/n);const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();
-s.buffer=b;f.type='bandpass';f.frequency.value=1200;g.gain.value=.8;s.connect(f);f.connect(g);g.connect(a.destination);s.start()}catch(e){}}
+const synthShuffle=()=>{try{for(let i=0;i<16;i++)noise(i*.07,.06,2000+Math.random()*3000,.6)}catch(e){}};
+const synthCard=()=>{try{noise(0,.08,1200,.8)}catch(e){}};
+const mk=u=>{const a=new Audio();a.preload='auto';a.src=u;return a};
+const SH=mk('shuffle.mp3'),CD=mk('card.mp3');let shOK=true,cdOK=true;
+SH.onerror=()=>{shOK=false};CD.onerror=()=>{cdOK=false};
+function unlock(){try{ac()}catch(e){}
+[SH,CD].forEach(a=>{if(a._u)return;a._u=1;a.muted=true;const p=a.play();
+if(p&&p.then)p.then(()=>{a.pause();a.currentTime=0;a.muted=false}).catch(()=>{a._u=0;a.muted=false})})}
+['pointerdown','touchstart','click'].forEach(e=>addEventListener(e,unlock,{passive:true}));
+function sndShuffle(){try{if(shOK){SH.currentTime=0;const p=SH.play();if(p&&p.catch)p.catch(synthShuffle)}else synthShuffle()}catch(e){synthShuffle()}}
+function sndCard(){try{if(cdOK){const c=CD.cloneNode();c.volume=1;const p=c.play();if(p&&p.catch)p.catch(synthCard)}else synthCard()}catch(e){synthCard()}}
+
+/* ---------- chat ---------- */
+let off=0,lastSend=0,unread=0,chatKeys=[];
+db.ref('.info/serverTimeOffset').on('value',s=>{off=s.val()||0});
+const chatIsOpen=()=>!$('chat').classList.contains('col');
+function toggleChat(force){
+  const c=$('chat');
+  const open=typeof force==='boolean'?force:!chatIsOpen();
+  c.classList.toggle('col',!open);
+  document.body.classList.toggle('chatopen',open);
+  $('cx').textContent=open?'✕ বন্ধ':'▸';
+  if(open){
+    unread=0;$('cn').textContent='';
+    const m=$('cm');m.scrollTop=m.scrollHeight;
+    setTimeout(()=>$('ci').focus(),60);
+  }else{
+    $('ci').blur();
+  }
+}
+function showBubble(m){const b=document.createElement('div');b.className='bub';
+b.innerHTML=`${esc(m.a||'')} <b>${esc(m.n||'')}:</b> ${esc(m.x||'')}`;
+const w=$('bubs');w.appendChild(b);while(w.children.length>4)w.removeChild(w.firstChild);
+setTimeout(()=>b.classList.add('out'),4500);setTimeout(()=>b.remove(),5000)}
+function addMsg(k,m){const mm=$('cm');if(mm.querySelector('[data-k="'+k+'"]'))return;
+const d=document.createElement('div');d.dataset.k=k;d.className='cmsg'+(m.u===uid?' mine':'');
+d.innerHTML=`<b>${esc(m.a||'')} ${esc(m.n||'')}:</b> ${esc(m.x||'')}`;
+const near=mm.scrollHeight-mm.scrollTop-mm.clientHeight<40;mm.appendChild(d);
+if(near||m.u===uid)mm.scrollTop=mm.scrollHeight}
+function listenChat(){const c=ref.child('chat');
+c.limitToLast(40).on('child_added',s=>{const m=s.val();if(!m)return;chatKeys.push(s.key);addMsg(s.key,m);
+if(Date.now()+off-(m.t||0)<8000){
+  if(!chatIsOpen())showBubble(m);
+  if(!chatIsOpen()&&m.u!==uid){unread++;$('cn').textContent=unread}
+}});
+c.on('child_removed',s=>{const e=$('cm').querySelector('[data-k="'+s.key+'"]');if(e)e.remove();
+const i=chatKeys.indexOf(s.key);if(i>=0)chatKeys.splice(i,1)})}
+function sendChat(){const inp=$('ci'),x=inp.value.trim();if(!x||!S||me<0||!ref)return;
+const now=Date.now();if(now-lastSend<700)return;lastSend=now;
+const p=(S.players||{})[me]||{};
+ref.child('chat').push({n:p.name||'',a:p.av||'',u:uid,x:x,t:firebase.database.ServerValue.TIMESTAMP});
+while(chatKeys.length>40)ref.child('chat/'+chatKeys.shift()).remove();
+inp.value='';inp.focus()}
 
 /* ---------- room ---------- */
 const uid=sessionStorage.uid||(sessionStorage.uid=Math.random().toString(36).slice(2,10));
 const AVS=['🦁','🤖','👽','🐼','🦊','🐯','🐸','🦄'];let av=localStorage.av||AVS[0];
 function pickAv(a){av=a;try{localStorage.av=a}catch(e){}drawAv()}
 function drawAv(){$('avs').innerHTML=AVS.map(a=>`<span class="avc ${a===av?'sel':''}" onclick="pickAv('${a}')">${a}</span>`).join('')}
-function enter(code){room=code;sessionStorage.spr=code;ref=db.ref('callbridge/'+room);ref.on('value',s=>{S=s.val();if(!S){leave();return}render()})}
+function enter(code){room=code;sessionStorage.spr=code;ref=db.ref('callbridge/'+room);ref.on('value',s=>{S=s.val();if(!S){leave();return}render()});listenChat()}
 function nm(){const n=$('pn').value.trim();if(!n)alert('নাম লিখুন!');return n}
 function create(){const n=nm();if(!n)return;const c=Math.random().toString(36).slice(2,7).toUpperCase();
 db.ref('callbridge/'+c).set({phase:'waiting',host:uid,players:{0:{name:n,av,id:uid}}}).then(()=>enter(c))}
@@ -119,7 +200,7 @@ function shuffle(){tx(r=>{if(r.phase!=='shuffle'||r.shuffler!==me)return;return 
 function startGame(){tx(r=>{if(r.phase!=='waiting'||r.host!==uid)return;const p=r.players||{};
 if([0,1,2,3].some(i=>!p[i]))return;return newGame(r)})}
 function restart(){tx(r=>{if(r.phase!=='over'||r.host!==uid)return;return newGame(r)})}
-function bid(v){tx(r=>{if(r.phase!=='bid'||r.turn!==me||v<1||v>13||r['c'+me]!=null)return;
+function bid(v){tx(r=>{if(r.phase!=='bid'||r.turn!==me||v<2||v>13||r['c'+me]!=null)return;
 r['c'+me]=v;r.bidsIn=(r.bidsIn||0)+1;
 if(r.bidsIn>=4){r.phase='play';r.turn=((r.dealer||0)+1)%4;r.table=[]}else r.turn=(me+1)%4;return r})}
 function legal(hand,t,c){if(!t.length)return true;const L=t[0].c[0],R=x=>ORD.indexOf(rk(x)),
@@ -139,7 +220,7 @@ t.forEach(x=>{if(x.c[0]===s&&(!w||ORD.indexOf(rk(x.c))>ORD.indexOf(rk(w.c))))w=x
 r['w'+w.p]=(r['w'+w.p]||0)+1;r.winner=w.p;r.trickNo=(r.trickNo||0)+1;r.phase='trickEnd';return r})}
 function next(d,n){tx(r=>{if(r.phase!=='trickEnd'||r.deal!==d||r.trickNo!==n)return;r.table=null;
 if(n<13){r.phase='play';r.turn=r.winner;r.table=[];return r}
-const out=[];for(let i=0;i<4;i++){const b=r['c'+i]||0,w=r['w'+i]||0,sc=w>=b?b*10+(w-b):-b*10;
+const out=[];for(let i=0;i<4;i++){const b=r['c'+i]||0,w=r['w'+i]||0,sc=(w>=b&&w<=b+1)?b*10:-b*10;
 r['s'+i]=(r['s'+i]||0)+sc;out.push(`${r.players[i].name}: ${fmt(sc)}`)}
 r.last='এই রাউন্ড → '+out.join(' | ');r.rd=(r.rd||0)+1;
 if(r.rd>=ROUNDS){r.phase='over';return r}
@@ -176,12 +257,12 @@ over:(S.last?esc(S.last)+'<br>':'')+'🏆 বিজয়ী: '+win()}[ph]||'';
 const z=$('zone');z.innerHTML='';tbl.forEach(t=>{const e=cardEl(t.c,'t p'+(t.p-me+4)%4);if(ph==='trickEnd'&&t.p===S.winner)e.classList.add('win');z.appendChild(e)});
 let h='';
 if(ph==='shuffle'&&S.shuffler===me)h='<button class="btn y" onclick="shuffle()">🔀 শাফল করুন</button>';
-else if(ph==='bid'&&my){if(selBid<1)selBid=1;
-for(let v=1;v<=13;v++)h+=`<button class="btn nb ${v===selBid?'y':''}" onclick="selBid=${v};render()">${v}</button>`;
+else if(ph==='bid'&&my){if(selBid<2)selBid=2;
+for(let v=2;v<=13;v++)h+=`<button class="btn nb ${v===selBid?'y':''}" onclick="selBid=${v};render()">${v}</button>`;
 h+=`<div style="width:100%"></div><button class="btn y" onclick="bid(selBid)">কল ${selBid}</button>`}
 else if(ph==='over'&&S.host===uid)h='<button class="btn y" onclick="restart()">🔄 আবার খেলুন</button>';
 $('panel').innerHTML=h;
-const mine=hands.slice(),L=tbl.length?tbl[0].c[0]:null,hasL=L&&mine.some(c=>c[0]===L),onlyS=mine.every(c=>c[0]==='S');
+const mine=hands.slice();
 const so='SHCD';mine.sort((a,b)=>so.indexOf(a[0])-so.indexOf(b[0])||ORD.indexOf(rk(b))-ORD.indexOf(rk(a)));
 const hd=$('hand');hd.innerHTML='';
 mine.forEach(c=>{let ok=false;if(ph==='play'&&my)ok=legal(mine,tbl,c);
